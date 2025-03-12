@@ -1,0 +1,133 @@
+# Workflow: Two-Robot Mars Simulation with Teleop & SLAM in ROS2 Humble (WSL2)
+
+1. Environment & Workspace Setup
+   1.1 Verify ROS2 Humble Installation
+       - Ensure you've installed ROS2 Humble on Ubuntu 22.04 under WSL2.
+       - Example command to verify:
+         printenv | grep ROS_DISTRO
+         # Should output "humble"
+       - Source your ROS2 environment in ~/.bashrc:
+         echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+         source ~/.bashrc
+
+   1.2 Create a ROS2 Workspace
+       - mkdir -p ~/mars_ws/src
+       - cd ~/mars_ws && colcon build
+       - source install/setup.bash
+
+2. Install Required Packages
+   2.1 Gazebo + ROS2 Plugins
+       - sudo apt update
+       - sudo apt install ros-humble-gazebo-ros ros-humble-gazebo-plugins
+   2.2 SLAM Toolbox
+       - sudo apt install ros-humble-slam-toolbox
+   2.3 Teleop Twist Keyboard
+       - sudo apt install ros-humble-teleop-twist-keyboard
+
+3. Create a Simple Mars World in Gazebo
+   3.1 Basic World File
+       - In ~/mars_ws/src/mars_world/worlds/mars.world, define:
+         <world name="mars_world">
+           <!-- Use a red/rocky skybox or terrain texture if you like -->
+           <!-- Minimal objects or obstacles for simplicity -->
+         </world>
+   3.2 Package Setup
+       - Create a package for your world:
+         cd ~/mars_ws/src
+         ros2 pkg create --build-type ament_cmake mars_world
+       - Place mars.world inside mars_world/worlds/.
+       - Update CMakeLists.txt to install or reference the world if needed.
+
+4. Define a Simple Differential Drive Robot
+   4.1 Robot Description
+       - Create a URDF or Xacro in a new package, e.g. `my_robot_description`.
+         ros2 pkg create --build-type ament_cmake my_robot_description
+       - Define a simple differential-drive robot with a LiDAR sensor in a URDF file.
+         Example: my_robot.urdf.xacro
+   4.2 Two Robots in Different Namespaces
+       - You’ll spawn robot1 (namespace: /robot1) and robot2 (namespace: /robot2).
+       - Each has its own TF tree and topics: /robot1/scan, /robot1/cmd_vel, etc.
+
+5. Launch File to Spawn Two Robots
+   5.1 Create a Launch File (e.g., `two_robots.launch.py`) in a new package
+       ros2 pkg create --build-type ament_cmake mars_simulation
+       - In mars_simulation/launch/two_robots.launch.py:
+         - Start Gazebo with mars.world.
+         - Spawn two instances of the robot URDF with unique names & namespaces.
+         - Example:
+           - /robot1 at x=0, y=0
+           - /robot2 at x=2, y=0
+   5.2 Build & Source
+       - cd ~/mars_ws
+       - colcon build
+       - source install/setup.bash
+
+6. Teleoperation for Two Robots
+   6.1 Run Two Separate Teleop Nodes
+       - Terminal A (for Robot 1 with arrow keys):
+         ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args \
+           -r cmd_vel:=/robot1/cmd_vel
+         # By default, teleop_twist_keyboard uses arrow keys
+       - Terminal B (for Robot 2 with WASD):
+         - You can clone teleop_twist_keyboard and modify the key mappings OR
+         - Use the built-in alternative key set:
+           ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args \
+             -r cmd_vel:=/robot2/cmd_vel
+         # By default, it also recognizes WASD keys, but arrow keys overlap.
+         # If you want strictly WASD, you may need a custom teleop config.
+
+7. SLAM Setup (Using SLAM Toolbox)
+   7.1 Single vs. Multi-Robot SLAM
+       - **Option A**: Run one SLAM instance per robot (simpler to set up).
+       - **Option B**: Merge data in a single SLAM instance (more advanced).
+   7.2 Single SLAM Instance per Robot
+       - Terminal C:
+         ros2 launch slam_toolbox online_sync_launch.py \
+           slam_params_file:=<path_to_params> \
+           use_sim_time:=true \
+           namespace:=robot1 \
+           remappings:=[/scan:=/robot1/scan]
+       - Terminal D:
+         ros2 launch slam_toolbox online_sync_launch.py \
+           slam_params_file:=<path_to_params> \
+           use_sim_time:=true \
+           namespace:=robot2 \
+           remappings:=[/scan:=/robot2/scan]
+       - Each instance publishes its own /map topic (e.g., /robot1/map, /robot2/map).
+
+8. Visualizing in RViz2
+   8.1 Launch RViz2
+       - ros2 run rviz2 rviz2
+   8.2 Configure Display
+       - Add two Map displays, one for /robot1/map and another for /robot2/map.
+       - Add TF, LaserScan displays for /robot1/scan and /robot2/scan.
+       - Observe each robot’s pose and map building in real time.
+
+9. Run the Full Simulation
+   9.1 Launch Gazebo & Robots
+       - Terminal 1:
+         ros2 launch mars_simulation two_robots.launch.py
+   9.2 Start Teleop for Each Robot
+       - Terminal 2: Teleop Robot1 (arrow keys)
+       - Terminal 3: Teleop Robot2 (WASD)
+   9.3 Start SLAM
+       - Terminal 4: SLAM for Robot1
+       - Terminal 5: SLAM for Robot2
+   9.4 Launch RViz2
+       - Terminal 6:
+         ros2 run rviz2 rviz2
+       - Configure to see both maps/scans.
+
+10. Troubleshooting & Tips
+   - If you encounter GUI or rendering issues in WSL2, confirm WSLg is set up properly:
+     gz client --verbose
+   - For multi-robot SLAM map merging, see advanced SLAM Toolbox tutorials (e.g., map merging).
+   - Check topic remappings carefully to avoid collisions (e.g., /scan -> /robot1/scan).
+   - If controlling both robots simultaneously from one keyboard is tricky, you can run each teleop node in a separate terminal and alternate between them, or use a custom teleop node with distinct key mappings.
+
+11. Final Notes
+   - This workflow omits path planning and focuses on simple teleoperation + SLAM.
+   - Keep the environment minimal to reduce performance overhead in WSL2.
+   - Build incrementally: test one robot first, then add the second.
+   - For further expansions (like merging maps or adding obstacles), update your URDF/world file accordingly.
+

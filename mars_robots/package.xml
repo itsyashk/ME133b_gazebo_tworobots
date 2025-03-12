@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>mars_robots</name>
+  <version>0.0.1</version>
+  <description>Differential-drive robot models for Mars exploration simulation</description>
+  <maintainer email="user@example.com">user</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package> 

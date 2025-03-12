@@ -1,0 +1,22 @@
+# ROS 2 build artifacts
+build/
+install/
+log/
+
+# Various log files
+*.log
+
+# ROS bag files
+*.bag
+*.bag.*
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# OS specific files
+.DS_Store
+Thumbs.db 

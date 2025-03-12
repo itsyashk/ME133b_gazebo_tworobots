@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mars_robot">
+  
+  <!-- Include the robot model -->
+  <xacro:include filename="$(find mars_robots)/urdf/mars_robot.urdf.xacro" />
+  
+  <!-- Robot color parameter - allows configuring robots with different colors -->
+  <xacro:arg name="robot_color" default="Red"/>
+  
+</robot> 
