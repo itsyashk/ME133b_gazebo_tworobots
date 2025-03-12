@@ -1,13 +1,13 @@
 # Mars Exploration Simulation with Two-Robot SLAM in ROS2 Humble
 
-This project creates a simulation environment that mimics a Mars-like landscape in Gazebo, featuring two differential-drive robots equipped with LiDAR sensors for Simultaneous Localization and Mapping (SLAM). The robots can be independently controlled via separate keyboard inputs, both using WASD keys in separate terminal windows.
+This project creates a simulation environment that mimics a Mars-like landscape in Gazebo, featuring two differential-drive robots equipped with LiDAR sensors for Simultaneous Localization and Mapping (SLAM). The robots can be independently controlled via separate keyboard inputs: robot1 uses WASD keys and robot2 uses arrow keys.
 
 ## Overview
 
 - **Mars Environment**: A Gazebo world that simulates Mars terrain with appropriate gravity and visual characteristics
 - **Two Robots**: Differential-drive robots with LiDAR sensors for mapping
 - **SLAM Processing**: Independent SLAM instances for each robot
-- **Teleoperation**: Keyboard control for both robots using WASD keys
+- **Teleoperation**: Keyboard control with robot1 using WASD keys and robot2 using arrow keys
 - **Visualization**: RViz2 for visualizing maps, sensor data, and TF frames
 
 ## Prerequisites
@@ -87,7 +87,7 @@ source install/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/robot1/cmd_vel
 ```
 
-### Terminal 3: Control Robot 2 (WASD Keys)
+### Terminal 3: Control Robot 2 (Arrow Keys)
 
 ```bash
 # Open WSL (if in Windows PowerShell)
@@ -108,9 +108,19 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/ro
 
 ## Robot Control Instructions
 
-### For Both Robots
+### Robot 1 (WASD Keys)
+- w: move forward
+- s: move backward
+- a: turn left
+- d: turn right
 
-The teleop_twist_keyboard provides the following controls:
+### Robot 2 (Arrow Keys)
+- ↑ (up arrow): move forward
+- ↓ (down arrow): move backward
+- ← (left arrow): turn left
+- → (right arrow): turn right
+
+The teleop_twist_keyboard provides additional controls:
 
 ```
 Reading from the keyboard and publishing to Twist!
@@ -138,9 +148,7 @@ e/c : increase/decrease only angular speed by 10%
 CTRL-C to quit
 ```
 
-**Important Notes**: 
-- For WASD controls: 'w' is forward, 's' is backward, 'a' is turn left, and 'd' is turn right.
-- Focus on the appropriate terminal when controlling each robot.
+**Important**: Focus on the appropriate terminal when controlling each robot.
 
 ## Monitoring and Debugging
 

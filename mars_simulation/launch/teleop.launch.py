@@ -20,14 +20,17 @@ def generate_launch_description():
         ],
     )
     
-    # Launch teleop for robot2 (WASD keys)
+    # Launch teleop for robot2 (Arrow keys)
     teleop_robot2 = Node(
         package='teleop_twist_keyboard',
         executable='teleop_twist_keyboard',
         name='teleop_robot2',
         output='screen',
-        prefix='xterm -T "Robot 2 Teleop (WASD)" -e',
+        prefix='xterm -T "Robot 2 Teleop (Arrow Keys)" -e',
         remappings=[('/cmd_vel', '/robot2/cmd_vel')],
+        parameters=[
+            {'key_timeout': 0.0},  # No timeout for keypresses
+        ],
     )
     
     # Return the launch description
