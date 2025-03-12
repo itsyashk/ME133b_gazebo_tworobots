@@ -1,13 +1,13 @@
 # Mars Exploration Simulation with Two-Robot SLAM in ROS2 Humble
 
-This project creates a simulation environment that mimics a Mars-like landscape in Gazebo, featuring two differential-drive robots equipped with LiDAR sensors for Simultaneous Localization and Mapping (SLAM). The robots can be independently controlled via separate keyboard inputs, with one using arrow keys and the other using WASD.
+This project creates a simulation environment that mimics a Mars-like landscape in Gazebo, featuring two differential-drive robots equipped with LiDAR sensors for Simultaneous Localization and Mapping (SLAM). The robots can be independently controlled via separate keyboard inputs, both using WASD keys in separate terminal windows.
 
 ## Overview
 
 - **Mars Environment**: A Gazebo world that simulates Mars terrain with appropriate gravity and visual characteristics
 - **Two Robots**: Differential-drive robots with LiDAR sensors for mapping
 - **SLAM Processing**: Independent SLAM instances for each robot
-- **Teleoperation**: Keyboard control for both robots
+- **Teleoperation**: Keyboard control for both robots using WASD keys
 - **Visualization**: RViz2 for visualizing maps, sensor data, and TF frames
 
 ## Prerequisites
@@ -68,7 +68,7 @@ This will start:
 - SLAM processes for both robots
 - RViz2 for visualization
 
-### Terminal 2: Control Robot 1 (Arrow Keys)
+### Terminal 2: Control Robot 1 (WASD Keys)
 
 ```bash
 # Open WSL (if in Windows PowerShell)
@@ -138,7 +138,9 @@ e/c : increase/decrease only angular speed by 10%
 CTRL-C to quit
 ```
 
-**Important**: Focus on the appropriate terminal when controlling each robot.
+**Important Notes**: 
+- For WASD controls: 'w' is forward, 's' is backward, 'a' is turn left, and 'd' is turn right.
+- Focus on the appropriate terminal when controlling each robot.
 
 ## Monitoring and Debugging
 

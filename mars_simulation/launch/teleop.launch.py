@@ -7,14 +7,17 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    # Launch teleop for robot1 (arrow keys)
+    # Launch teleop for robot1 (WASD keys)
     teleop_robot1 = Node(
         package='teleop_twist_keyboard',
         executable='teleop_twist_keyboard',
         name='teleop_robot1',
         output='screen',
-        prefix='xterm -e',
+        prefix='xterm -T "Robot 1 Teleop (WASD)" -e',
         remappings=[('/cmd_vel', '/robot1/cmd_vel')],
+        parameters=[
+            {'key_timeout': 0.0},  # No timeout for keypresses
+        ],
     )
     
     # Launch teleop for robot2 (WASD keys)

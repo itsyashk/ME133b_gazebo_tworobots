@@ -36,6 +36,12 @@ def generate_launch_description():
         }.items()
     )
     
+    teleop_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(mars_sim_pkg_dir, 'launch', 'teleop.launch.py')
+        ])
+    )
+    
     rviz_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             os.path.join(mars_sim_pkg_dir, 'launch', 'rviz.launch.py')
@@ -57,5 +63,6 @@ def generate_launch_description():
         # Launch Files
         two_robots_launch,
         slam_launch,
+        teleop_launch,
         rviz_launch,
     ]) 
